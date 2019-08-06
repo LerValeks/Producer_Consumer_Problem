@@ -23,7 +23,7 @@ public class ProductionLineTest {
             boolean tasksEnded =
                     executorService.awaitTermination(1, TimeUnit.MINUTES);
             if (tasksEnded) {
-                System.out.println("Array was sorted");
+                System.out.println("Task was finished");
             } else {
                 System.out.println(
                         "Timed out while waiting for tasks to finish.");
@@ -31,7 +31,6 @@ public class ProductionLineTest {
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
-
 
 
     }

@@ -1,24 +1,28 @@
 package pl.ovaluyskov.ProductionLine;
 
-public class Consumer implements Runnable{
+public class Consumer implements Runnable {
 
     private final ProductionLine productionLine;
 
     public Consumer(ProductionLine productionLine) {
-        this.productionLine= productionLine;
+        this.productionLine = productionLine;
     }
 
     @Override
     public void run() {
         try {
-            Integer data = productionLine.getNum();
+            while (true) {
+                synchronized (this) {
+                    while (productionLine.getFilledSlots() == 0) wait();
+                    productionLine.deleteBox();
+                    productionLine.setProducedBoxes();
 
-            while(productionLine.isProducing()|| data>0){
-                Thread.sleep(1000);
-                System.out.println("Consumer processed data from broker " +data);
-                data = productionLine.getNum();;
-                productionLine.add();
+                    System.out.println("Consumer processed boxe from production line " + productionLine.getFilledSlots());
+                    System.out.println("Total prduced boxes" + productionLine.getProducedBoxes());
+                    notify();
+                    Thread.sleep(1000);
 
+                }
             }
         } catch (InterruptedException excep) {
             excep.printStackTrace();

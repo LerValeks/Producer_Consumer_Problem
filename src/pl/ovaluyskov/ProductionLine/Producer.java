@@ -7,24 +7,34 @@ public class Producer implements Runnable {
 
 
     public Producer(ProductionLine productionLine) {
-        this.productionLine= productionLine;
+        this.productionLine = productionLine;
     }
 
     @Override
     public void run() {
         ArrayList unsortedArray = new ArrayList();
-
+        int i = 1;
         try {
-            for(int i = 1; i<5;i++) {
-                System.out.println("Producer produced " + i);
-                Thread.sleep(100);
-                productionLine.add();
-            }
+                while  (i<=10) {
+                    synchronized (this) {
+                        while (productionLine.getFilledSlots() == productionLine.getCapacity())
+                            wait();
+
+                        productionLine.addBox();
+                        System.out.println("Producer produced " + productionLine.getFilledSlots());
+                        i++;
+                        notify();
+                        Thread.sleep(1000);
+
+                    }
+                }
+
+
         } catch (InterruptedException excep) {
             excep.printStackTrace();
         }
 
-        this.productionLine.setProducing();
+        this.productionLine.FinishProduction();
 
     }
 }

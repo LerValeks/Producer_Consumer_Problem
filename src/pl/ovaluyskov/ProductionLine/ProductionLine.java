@@ -6,20 +6,44 @@ import java.util.concurrent.TimeUnit;
 
 public class ProductionLine {
 
-    private Integer num=0;
-    private boolean producing  = Boolean.TRUE;
+    private Integer filledSlots = 0;
+    private Integer emptySlots = 5;
+    private Integer capacity = 5;
+    private boolean producing = Boolean.TRUE;
+    private Integer producedBoxes = 0;
 
 
-    public void add() {
-        this.num += 1;
+    public Integer getProducedBoxes() {
+        return producedBoxes;
     }
 
-    public Integer getNum() throws InterruptedException {
-        TimeUnit.MILLISECONDS.sleep(100);
-        return num;
+    public void setProducedBoxes() {
+        this.producedBoxes += 1;
     }
 
-    public void setProducing() {
+    public Integer getCapacity() {
+        return capacity;
+    }
+
+    public void addBox() {
+        this.filledSlots += 1;
+        this.emptySlots -= 1;
+    }
+
+    public void deleteBox() {
+        this.filledSlots -= 1;
+        this.emptySlots += 1;
+    }
+
+    public Integer getFilledSlots() {
+        return filledSlots;
+    }
+
+    public Integer getEmptySlots() {
+        return emptySlots;
+    }
+
+    public void FinishProduction() {
         this.producing = false;
     }
 
