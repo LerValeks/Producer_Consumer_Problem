@@ -6,18 +6,30 @@ import java.util.concurrent.TimeUnit;
 
 public class ProductionLine {
 
-    private Integer filledSlots = 0;
-    private Integer emptySlots = 5;
-    private Integer capacity = 5;
-    private boolean producing = Boolean.TRUE;
-    private Integer producedBoxes = 0;
+    private Integer filledSlots;
+    private Integer emptySlots;
+    private Integer capacity;
+    private Integer producedBoxes;
+    private Integer toBeProduced;
 
+    public ProductionLine(Integer filledSlots, Integer emptySlots, Integer capacity,
+                           Integer producedBoxes, Integer toBeProduced) {
+        this.emptySlots = emptySlots;
+        this.filledSlots = filledSlots;
+        this.capacity = capacity;
+        this.producedBoxes = producedBoxes;
+        this.toBeProduced = toBeProduced;
+    }
 
-    public Integer getProducedBoxes() {
+    public Integer getToBeProduced() {
+        return toBeProduced;
+    }
+
+    public  Integer getProducedBoxes() {
         return producedBoxes;
     }
 
-    public void setProducedBoxes() {
+    public  synchronized void setProducedBoxes() {
         this.producedBoxes += 1;
     }
 
@@ -25,29 +37,22 @@ public class ProductionLine {
         return capacity;
     }
 
-    public void addBox() {
+    public  synchronized void addBox() {
         this.filledSlots += 1;
         this.emptySlots -= 1;
     }
 
-    public void deleteBox() {
+    public synchronized void deleteBox() {
         this.filledSlots -= 1;
         this.emptySlots += 1;
     }
 
-    public Integer getFilledSlots() {
+    public  Integer getFilledSlots() {
         return filledSlots;
     }
 
-    public Integer getEmptySlots() {
+    public  Integer getEmptySlots() {
         return emptySlots;
     }
 
-    public void FinishProduction() {
-        this.producing = false;
-    }
-
-    public boolean isProducing() {
-        return producing;
-    }
 }
