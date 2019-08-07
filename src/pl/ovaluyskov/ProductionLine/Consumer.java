@@ -22,6 +22,7 @@ public class Consumer implements Runnable {
                     System.out.println(getName() + ": Line is empty");
                     wait();
                 }
+
                 productionLine.deleteBox();
 
 
