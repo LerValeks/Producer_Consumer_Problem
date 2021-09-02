@@ -1,27 +1,46 @@
 package pl.ovaluyskov.ProductionLine;
 
-public class Consumer implements Runnable{
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
+public class Consumer implements Runnable {
+    ReentrantLock lock;
+    Condition con;
     private final ProductionLine productionLine;
 
-    public Consumer(ProductionLine productionLine) {
-        this.productionLine= productionLine;
+    public Consumer(ReentrantLock lock, Condition con, ProductionLine productionLine) {
+        this.lock = lock;
+        this.con = con;
+        this.productionLine = productionLine;
     }
 
     @Override
     public void run() {
+
+
         try {
-            Integer data = productionLine.getNum();
+            while (productionLine.isProducing() ||  productionLine.getNumberOfBoxOnProductionLine() > 0) {
+                
+//                Thread.sleep(1000);
+                lock.lock();
+                while (productionLine.getNumberOfBoxOnProductionLine() < 1)
 
-            while(productionLine.isProducing()|| data>0){
-                Thread.sleep(1000);
-                System.out.println("Consumer processed data from broker " +data);
-                data = productionLine.getNum();;
-                productionLine.add();
+                    try {
+                        System.out.println("Consumer waiting");
+                        con.await();
 
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                productionLine.remove();
+                productionLine.setNumberOfConsumedBoxes();
+                System.out.println("Consumer " + Thread.currentThread().getName() + " boxes on Line " + productionLine.getNumberOfBoxOnProductionLine() + " box consumed: " + productionLine.getNumberOfConsumedBoxes());
+                con.signal();
+                lock.unlock();
             }
         } catch (InterruptedException excep) {
             excep.printStackTrace();
         }
+
     }
 }

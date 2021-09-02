@@ -6,17 +6,31 @@ import java.util.concurrent.TimeUnit;
 
 public class ProductionLine {
 
-    private Integer num=0;
-    private boolean producing  = Boolean.TRUE;
+    private Integer numberOfBoxOnProductionLine = 0;
+    final private Integer maxNumberOfBoxOnProductionLine = 16;
+    private boolean producing = Boolean.TRUE;
+    public Integer numberOfConsumedBoxes = 0;
 
 
     public void add() {
-        this.num += 1;
+        this.numberOfBoxOnProductionLine += 1;
     }
 
-    public Integer getNum() throws InterruptedException {
+    public Integer getNumberOfConsumedBoxes() {
+        return numberOfConsumedBoxes;
+    }
+
+    public void setNumberOfConsumedBoxes() {
+        this.numberOfConsumedBoxes = numberOfConsumedBoxes + 1;
+    }
+
+    public void remove() {
+        this.numberOfBoxOnProductionLine -= 1;
+    }
+
+    public Integer getNumberOfBoxOnProductionLine() throws InterruptedException {
         TimeUnit.MILLISECONDS.sleep(100);
-        return num;
+        return numberOfBoxOnProductionLine;
     }
 
     public void setProducing() {
@@ -25,5 +39,9 @@ public class ProductionLine {
 
     public boolean isProducing() {
         return producing;
+    }
+
+    public Integer getMaxNumberOfBoxOnProductionLine() {
+        return maxNumberOfBoxOnProductionLine;
     }
 }
